@@ -1,3 +1,6 @@
+# Custom folders/files
+data/*.jpg
+
 # Jupyter Notebook
 .ipynb_checkpoints
 

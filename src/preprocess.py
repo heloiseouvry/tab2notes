@@ -45,3 +45,24 @@ def read_image(filepath, color=True):
         filepath = f'{filepath[:-4]}.jpg'
 
     return cv2.imread(filepath, int(color))
+
+def isGPformat(img):
+    h,w = img.shape
+    if round(h/w,1) != 1.4:
+        print('Input image should be in a GuitarPro format standard')
+        return False
+    return True
+
+def extract_parts(GPimg):
+    h,w = GPimg.shape
+    mesure_height = int(0.053*h)
+    mesure_width = int(0.84*w)
+    start_rows = [int(r * h) for r in [0.223, 0.363, 0.5, 0.63]]
+    # start_rows = [int(r * h) for r in [0.223, 0.363, 0.5, 0.63, 0.756]]
+    start_cols = int(0.107 * w)
+    nb_parts = 4
+    # nb_parts = 5
+    parts = [[] for i in range(nb_parts)]
+    for (i,r) in enumerate(start_rows):
+        parts[i] = GPimg[r:r+mesure_height,start_cols:start_cols+mesure_width]
+    return parts

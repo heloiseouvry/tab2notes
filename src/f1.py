@@ -8,4 +8,8 @@ parser.add_argument('-v','--verbose', help='more verbose')
 args = parser.parse_args()
 
 if __name__ == "__main__":
+
     img = preprocess.read_image(args.input, 0)
+    if preprocess.isGPformat(img):
+        parts = preprocess.extract_parts(img)
+        print(parts[0].shape)

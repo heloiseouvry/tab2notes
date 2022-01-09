@@ -43,15 +43,16 @@ if __name__ == "__main__":
         dgt_idx = detect.get_digit_idx(removed)
         dgt_img = detect.get_digit_img(removed)
 
-        parts_bolded = postprocess.bold_bottom_staff(parts['original'][0],staff_idx)
-
         # cv2.imwrite(r'..\results\parts_0.jpg',parts_0)
         # cv2.imwrite(r'..\results\thresh_0.jpg',thresh_0)
         # cv2.imwrite(r'..\results\removed.jpg',removed)
-        # cv2.imwrite(r'..\results\parts_bolded.jpg',parts_bolded)
 
+        translated_part = copy.deepcopy(parts['original'][0])
         for (i,d) in enumerate(dgt_img):
             dgt = classif.with_digit_template(d)
             d_idx = dgt_idx[i]
             note = classif.to_note(dgt,d_idx,staff_idx,notation='fr')
-            print(note)
+            translated_part = postprocess.paste_note(translated_part,d_idx,note)
+        translated_part = postprocess.bold_bottom_staff(translated_part, staff_idx)
+        # cv2.imwrite(r'..\results\translated_part.jpg',translated_part)
+        

@@ -3,6 +3,7 @@ import copy
 import classif
 import detect
 import preprocess
+import postprocess
 import numpy as np
 import cv2
 
@@ -42,9 +43,12 @@ if __name__ == "__main__":
         dgt_idx = detect.get_digit_idx(removed)
         dgt_img = detect.get_digit_img(removed)
 
+        parts_bolded = postprocess.bold_bottom_staff(parts['original'][0],staff_idx)
+
         # cv2.imwrite(r'..\results\parts_0.jpg',parts_0)
         # cv2.imwrite(r'..\results\thresh_0.jpg',thresh_0)
         # cv2.imwrite(r'..\results\removed.jpg',removed)
+        # cv2.imwrite(r'..\results\parts_bolded.jpg',parts_bolded)
 
         for (i,d) in enumerate(dgt_img):
             dgt = classif.with_digit_template(d)

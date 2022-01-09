@@ -40,6 +40,12 @@ if __name__ == "__main__":
         
             parts['staff_line'][p] = detect.staff_idx(parts['thresh'][p])
             parts['staff_col'][p] = detect.col_idx(parts['thresh'][p])
+            last = detect.is_last_part(parts['staff_col'][p])
+            if last:
+                parts['original'][p] = parts['original'][p][:,:last]
+                parts['inv'][p] = parts['inv'][p][:,:last]
+                parts['thresh'][p] = parts['thresh'][p][:,:last]
+                parts['idx'][p][1] = (parts['idx'][p][1][0], parts['idx'][p][0][1] + last)
 
             parts['wo_staff'][p] = detect.remove_staff_idx(parts['thresh'][p], parts['staff_line'][p])
             parts['wo_staff'][p] = detect.remove_col_idx(parts['wo_staff'][p], parts['staff_col'][p])
@@ -47,9 +53,9 @@ if __name__ == "__main__":
             parts['digits'][p]['idx'] = detect.get_digit_idx(parts['wo_staff'][p])
             parts['digits'][p]['img'] = detect.get_digit_img(parts['wo_staff'][p])
 
-            # cv2.imwrite(f'..\\results\\parts_{p}.jpg',parts['inv'][p])
-            # cv2.imwrite(f'..\\results\\thresh_{p}.jpg',parts['thresh'][p])
-            # cv2.imwrite(f'..\\results\\remove{p}.jpg',parts['wo_staff'][p])
+            cv2.imwrite(f'..\\results\\parts_{p}.jpg',parts['inv'][p])
+            cv2.imwrite(f'..\\results\\thresh_{p}.jpg',parts['thresh'][p])
+            cv2.imwrite(f'..\\results\\remove{p}.jpg',parts['wo_staff'][p])
 
             parts['translated'][p] = copy.deepcopy(parts['original'][p])
 

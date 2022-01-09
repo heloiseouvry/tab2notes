@@ -24,6 +24,11 @@ def staff_idx(img):
 def col_idx(img):
     return get_white_lines_extremum(np.transpose(img))
 
+def is_last_part(col_idx):
+    for i in col_idx:
+        if i[1]-i[0] > 7:
+            return i[1]
+
 def get_extremum(idx):
     for (i,j) in enumerate(idx):
         if i == len(idx)-1: break

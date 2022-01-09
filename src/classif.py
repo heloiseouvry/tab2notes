@@ -71,6 +71,8 @@ def to_staff(dgt_idx, staff_idx):
         if s[0] > dgt_idx[0][0] and s[1] < dgt_idx[1][0] :
             return s_idx
 
-def to_note(dgt, dgt_idx, staff_idx):
-    return notes_fr[to_staff(dgt_idx, staff_idx)][dgt]
-    
+def to_note(dgt, dgt_idx, staff_idx, notation=''):
+    if notation == 'fr':
+        return notes_fr[to_staff(dgt_idx, staff_idx)][dgt]
+    else:
+        return notes[to_staff(dgt_idx, staff_idx)][dgt]

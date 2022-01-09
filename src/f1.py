@@ -49,5 +49,5 @@ if __name__ == "__main__":
         for (i,d) in enumerate(dgt_img):
             dgt = classif.with_digit_template(d)
             d_idx = dgt_idx[i]
-            note = classif.to_note(dgt,d_idx,staff_idx)
+            note = classif.to_note(dgt,d_idx,staff_idx,notation='fr')
             print(note)

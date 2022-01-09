@@ -38,6 +38,9 @@ if __name__ == "__main__":
         removed = detect.remove_staff_idx(thresh_0, staff_idx)
         removed = detect.remove_col_idx(removed, col_idx)
 
+        dgt_idx = detect.get_digit_idx(removed)
+        dgt_img = detect.get_digit_img(removed)
+
         # cv2.imwrite(r'..\results\parts_0.jpg',parts_0)
         # cv2.imwrite(r'..\results\thresh_0.jpg',thresh_0)
         # cv2.imwrite(r'..\results\removed.jpg',removed)

@@ -43,6 +43,17 @@ def remove_staff_idx(img, idx):
 def remove_col_idx(img, idx):
     return np.transpose(remove_white_lines(np.transpose(img), idx))
 
+def get_digit_idx(img):
+    dgt_idx = []
+    for i in detect_intensity_along_axis(img, 255, 0):
+        roi = img[:,i[0]:i[1]]
+        dgt = detect_intensity_along_axis(roi, 255, 1)
+        for d in dgt:
+            dgt_idx.append([(d[0],i[0]),(d[1],i[1])])
+    return dgt_idx
 
-cold_idx = [523, 524, 988]
-# print(get_extremum(cold_idx))
+def get_digit_img(img):
+    dgt_img = []
+    for d in get_digit_idx(img):
+        dgt_img.append(img[d[0][0]:d[1][0],d[0][1]:d[1][1]])
+    return dgt_img

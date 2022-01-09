@@ -9,21 +9,40 @@ def detect_intensity_along_axis(img, intensity, ax):
     idx = [(idx[i], idx[i+1]) for i in range(0,len(idx),2)]
     return idx
 
-def get_white_lines(img):
+def get_white_lines_extremum(img):
     line = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
-    line = np.median(line, axis=1)
-    return np.where(line >= 250)[0]
+    mask = np.median(line, axis=1) >= 250
+    limits = np.zeros(mask.shape, dtype='uint8')
+    limits[1:-1] = (np.bitwise_xor(mask[1:-1], mask[0:-2])) * 255
+    idx = np.where(limits == 255)[0]
+    idx = [(idx[i], idx[i+1]) for i in range(0,len(idx),2)]
+    return idx
 
 def staff_idx(img):
-    return get_white_lines(img[:,0])
+    return get_white_lines_extremum(img[:,0:10])
 
 def col_idx(img):
-    return get_white_lines(np.transpose(img))
+    return get_white_lines_extremum(np.transpose(img))
+
+def get_extremum(idx):
+    for (i,j) in enumerate(idx):
+        if i == len(idx)-1: break
+        print(f'{j}>{idx[i+1]}')
 
 def remove_white_lines(img, idx):
     res = np.copy(img)
     for i in idx:
         for j in range(img.shape[1]):
-            if sum(img[i-5:i,j]) == 0 and sum(img[i+1:i+5,j]) == 0:
-                res[i,j] = 0
+            if sum(img[i[0]-5:i[0],j]) == 0 and sum(img[i[1]:i[1]+5,j]) == 0:
+                res[i[0]:i[1],j] = 0
     return res
+
+def remove_staff_idx(img, idx):
+    return remove_white_lines(img, idx)
+
+def remove_col_idx(img, idx):
+    return np.transpose(remove_white_lines(np.transpose(img), idx))
+
+
+cold_idx = [523, 524, 988]
+# print(get_extremum(cold_idx))

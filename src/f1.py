@@ -31,9 +31,15 @@ if __name__ == "__main__":
         parts['original'] = preprocess.extract_parts(img)
         parts_0 = preprocess.invert_img(parts['original'][0])
         thresh_0 = preprocess.thresh_img(parts_0)
-
+        
         staff_idx = detect.staff_idx(parts_0)
         col_idx = detect.col_idx(parts_0)
-        removed = detect.remove_white_lines(thresh_0, staff_idx)
+
+        removed = detect.remove_staff_idx(thresh_0, staff_idx)
+        removed = detect.remove_col_idx(removed, col_idx)
+
+        # cv2.imwrite(r'..\results\parts_0.jpg',parts_0)
+        # cv2.imwrite(r'..\results\thresh_0.jpg',thresh_0)
+        # cv2.imwrite(r'..\results\removed.jpg',removed)
 
 

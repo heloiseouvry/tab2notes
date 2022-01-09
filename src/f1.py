@@ -1,5 +1,6 @@
 import argparse
 import copy
+import classif
 import detect
 import preprocess
 import numpy as np
@@ -45,4 +46,8 @@ if __name__ == "__main__":
         # cv2.imwrite(r'..\results\thresh_0.jpg',thresh_0)
         # cv2.imwrite(r'..\results\removed.jpg',removed)
 
-
+        for (i,d) in enumerate(dgt_img):
+            dgt = classif.with_digit_template(d)
+            d_idx = dgt_idx[i]
+            note = classif.to_note(dgt,d_idx,staff_idx,notation='fr')
+            print(note)

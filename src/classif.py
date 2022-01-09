@@ -60,10 +60,17 @@ def with_digit_template(dgt_img):
     for i in range(10):
         if height != digit_template_h or width != digit_template_w:
             dgt_img = cv2.resize(dgt_img, (digit_template_w,digit_template_h), interpolation=cv2.INTER_NEAREST)        
-            
         sub = np.bitwise_xor(dgt_img.astype(bool), digit_template_img[i].astype(bool))
         classif_err.append(int(100*(np.mean(np.square(sub)))))
     #     print(f'Taux d\'erreur pour {i} : {classif_err[i]} %')
     # print(f'--> Classification = {np.argmin(classif_err)}')
     return np.argmin(classif_err)
 
+def to_staff(dgt_idx, staff_idx):
+    for (s_idx,s) in enumerate(staff_idx):
+        if s[0] > dgt_idx[0][0] and s[1] < dgt_idx[1][0] :
+            return s_idx
+
+def to_note(dgt, dgt_idx, staff_idx):
+    return notes_fr[to_staff(dgt_idx, staff_idx)][dgt]
+    

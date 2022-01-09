@@ -46,5 +46,8 @@ if __name__ == "__main__":
         # cv2.imwrite(r'..\results\thresh_0.jpg',thresh_0)
         # cv2.imwrite(r'..\results\removed.jpg',removed)
 
-        for d in dgt_img:
-            print(classif.with_digit_template(d))
+        for (i,d) in enumerate(dgt_img):
+            dgt = classif.with_digit_template(d)
+            d_idx = dgt_idx[i]
+            note = classif.to_note(dgt,d_idx,staff_idx)
+            print(note)

@@ -30,7 +30,8 @@ if __name__ == "__main__":
             'staff_col' : copy.deepcopy(empty_array),
             'digits' : [{'idx': [],'img': [],'classif': [],'note':[]} for i in range(nb_parts)]  
         }  
-        parts['original'] = preprocess.extract_parts(img)
+        parts['original'] = preprocess.extract_parts(img)[0]
+        parts['idx'] = preprocess.extract_parts(img)[1]
         parts_0 = preprocess.invert_img(parts['original'][0])
         thresh_0 = preprocess.thresh_img(parts_0)
         
@@ -48,11 +49,16 @@ if __name__ == "__main__":
         # cv2.imwrite(r'..\results\removed.jpg',removed)
 
         translated_part = copy.deepcopy(parts['original'][0])
+
         for (i,d) in enumerate(dgt_img):
             dgt = classif.with_digit_template(d)
             d_idx = dgt_idx[i]
             note = classif.to_note(dgt,d_idx,staff_idx,notation='fr')
             translated_part = postprocess.paste_note(translated_part,d_idx,note)
+        
         translated_part = postprocess.bold_bottom_staff(translated_part, staff_idx)
         # cv2.imwrite(r'..\results\translated_part.jpg',translated_part)
         
+        # Pasting all back on the image
+        img[parts['idx'][0][0][0]:parts['idx'][0][1][0],parts['idx'][0][0][1]:parts['idx'][0][1][1]] = translated_part
+        cv2.imwrite(r'..\results\translated_img.jpg',img)

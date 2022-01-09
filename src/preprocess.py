@@ -62,9 +62,11 @@ def extract_parts(GPimg):
     start_cols = int(0.107 * w)
     nb_parts = len(start_rows)
     parts = [[] for i in range(nb_parts)]
+    parts_idx = [[] for i in range(nb_parts)]
     for (i,r) in enumerate(start_rows):
         parts[i] = GPimg[r:r+mesure_height,start_cols:start_cols+mesure_width]
-    return parts
+        parts_idx[i] = [(r,start_cols),(r+mesure_height,start_cols+mesure_width)]
+    return [parts,parts_idx]
 
 def invert_img(img):
     return cv2.bitwise_not(img)

@@ -10,7 +10,7 @@ import cv2
 parser = argparse.ArgumentParser()
 parser.add_argument('-i','--input', help='path to input image file (required)')
 parser.add_argument('-d','--dest', help='path to output image file')
-parser.add_argument('-v','--verbose', help='more verbose')
+parser.add_argument('-v','--verbose', help='more verbose', action="store_true")
 args = parser.parse_args()
 
 if __name__ == "__main__":

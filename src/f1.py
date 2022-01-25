@@ -15,8 +15,8 @@ args = parser.parse_args()
 
 if __name__ == "__main__":
 
-    # img = preprocess.read_image(args.input, 0)
-    img = preprocess.read_image(r'..\data\arpege.jpg', 0)
+    img = preprocess.read_image(args.input, 0)
+    # img = preprocess.read_image(r'..\data\arpege.jpg', 0)
     translated_img = copy.deepcopy(img)
     if preprocess.isGPformat(img):
         nb_parts = 5
@@ -70,4 +70,5 @@ if __name__ == "__main__":
             
             # Pasting all back on the image
             translated_img[parts['idx'][p][0][0]:parts['idx'][p][1][0],parts['idx'][p][0][1]:parts['idx'][p][1][1]] = parts['translated'][p]
-        cv2.imwrite(f'..\\results\\translated_img.jpg',translated_img)
+        if args.dest:
+            cv2.imwrite(args.dest, translated_img)

@@ -1,5 +1,8 @@
 # Custom folders/files
 data/*.jpg
+data/*.pdf
+data/*.bmp
+data/*.docx
 results/
 
 # Jupyter Notebook

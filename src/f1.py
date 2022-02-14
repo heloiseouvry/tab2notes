@@ -19,20 +19,17 @@ if __name__ == "__main__":
     # img = preprocess.read_image(r'..\data\arpege.jpg', 0)
     translated_img = copy.deepcopy(img)
     if preprocess.isGPformat(img):
-        nb_parts = 5
-        empty_array = [[] for i in range(nb_parts)]
-        parts = {
-            'original': copy.deepcopy(empty_array),
-            'inv': copy.deepcopy(empty_array),
-            'thresh': copy.deepcopy(empty_array),
-            'wo_staff': copy.deepcopy(empty_array),
-            'translated': copy.deepcopy(empty_array),
-            'staff_line' : copy.deepcopy(empty_array),
-            'staff_col' : copy.deepcopy(empty_array),
-            'digits' : [{'idx': [],'img': [],'classif': [],'note':[]} for i in range(nb_parts)]  
-        }
-        parts['original'] = preprocess.extract_parts(img)[0]
-        parts['idx'] = preprocess.extract_parts(img)[1]
+        parts = {}
+        parts['original'], parts['idx'] = preprocess.extract_parts(img)
+        nb_parts = len(parts['original'])
+        empty_array = [[] for _ in range(nb_parts)]
+        parts['inv'] = copy.deepcopy(empty_array)
+        parts['thresh'] = copy.deepcopy(empty_array)
+        parts['wo_staff'] = copy.deepcopy(empty_array)
+        parts['translated'] = copy.deepcopy(empty_array)
+        parts['staff_line'] = copy.deepcopy(empty_array)
+        parts['staff_col'] = copy.deepcopy(empty_array)
+        parts['digits'] = [{'idx': [],'img': [],'classif': [],'note':[]} for _ in range(nb_parts)]  
 
         for p in range(nb_parts):
             parts['inv'][p] = preprocess.invert_img(parts['original'][p])

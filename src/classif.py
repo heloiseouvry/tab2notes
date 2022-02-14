@@ -58,9 +58,11 @@ def with_digit_template(dgt_img):
     height = dgt_img.shape[0]
     width = dgt_img.shape[1]
     for i in range(10):
+        template = digit_template_img[i]
         if height != digit_template_h or width != digit_template_w:
-            dgt_img = cv2.resize(dgt_img, (digit_template_w,digit_template_h), interpolation=cv2.INTER_NEAREST)        
-        sub = np.bitwise_xor(dgt_img.astype(bool), digit_template_img[i].astype(bool))
+            # dgt_img = cv2.resize(dgt_img, (digit_template_w,digit_template_h), interpolation=cv2.INTER_NEAREST)   # Resize digit to template size   
+            template = cv2.resize(template, (width,height), interpolation=cv2.INTER_NEAREST)                                # Resize template to digit size     
+        sub = np.bitwise_xor(dgt_img.astype(bool), template.astype(bool))
         classif_err.append(int(100*(np.mean(np.square(sub)))))
     #     print(f'Taux d\'erreur pour {i} : {classif_err[i]} %')
     # print(f'--> Classification = {np.argmin(classif_err)}')

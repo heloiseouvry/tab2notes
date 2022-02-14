@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 def detect_intensity_along_axis(img, intensity, ax):
-    mask = np.sum(img, axis=ax) >= intensity
+    mask = np.mean(img, axis=ax) >= intensity
     limits = np.zeros(mask.shape, dtype='uint8')
     limits[1:-1] = (np.bitwise_xor(mask[1:-1], mask[0:-2])) * intensity
     idx = np.where(limits == intensity)[0]
@@ -23,6 +23,11 @@ def staff_idx(img):
 
 def col_idx(img):
     return get_white_lines_extremum(np.transpose(img))
+
+def is_last_part(col_idx):
+    for i in col_idx:
+        if i[1]-i[0] > 7:
+            return i[1]
 
 def get_extremum(idx):
     for (i,j) in enumerate(idx):

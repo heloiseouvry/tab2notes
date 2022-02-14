@@ -1,6 +1,7 @@
 import os.path
 import cv2
 from pdf2image import convert_from_path
+import detect
 
 def pdf2jpg(filepath):
     """Saves JPG image(s) from PDF file.
@@ -55,17 +56,17 @@ def isGPformat(img):
 
 def extract_parts(GPimg):
     h,w = GPimg.shape
-    mesure_height = int(0.053*h)
+    mesure_height = int(0.06*h)
     mesure_width = int(0.84*w)
-    # start_rows = [int(r * h) for r in [0.223, 0.363, 0.5, 0.63]]
-    start_rows = [int(r * h) for r in [0.223, 0.363, 0.5, 0.63, 0.75]]
-    start_cols = int(0.107 * w)
-    nb_parts = len(start_rows)
-    parts = [[] for i in range(nb_parts)]
-    parts_idx = [[] for i in range(nb_parts)]
-    for (i,r) in enumerate(start_rows):
-        parts[i] = GPimg[r:r+mesure_height,start_cols:start_cols+mesure_width]
-        parts_idx[i] = [(r,start_cols),(r+mesure_height,start_cols+mesure_width)]
+    start_cols = int(0.107*w)
+    parts = []
+    parts_idx = []
+    idx = detect.detect_intensity_along_axis(GPimg, 255, 1)
+    for id in idx:
+        detected_height = id[1]-id[0]
+        if detected_height / h > 0.10:
+            parts.append(GPimg[id[1]-mesure_height:id[1],start_cols:start_cols+mesure_width])
+            parts_idx.append([(id[1]-mesure_height,start_cols),(id[1],start_cols+mesure_width)])
     return [parts,parts_idx]
 
 def invert_img(img):

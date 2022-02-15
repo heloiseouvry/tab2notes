@@ -59,13 +59,13 @@ if __name__ == "__main__":
 
             parts['translated'][p] = copy.deepcopy(parts['original'][p])
 
+            parts['translated'][p] = postprocess.bold_bottom_staff(parts['translated'][p], parts['staff_line'][p])
             for (i,d) in enumerate(parts['digits'][p]['img']):
                 dgt = classif.with_digit_template(d)
                 d_idx = parts['digits'][p]['idx'][i]
                 note = classif.to_note(dgt,d_idx,parts['staff_line'][p],notation='fr')
                 parts['translated'][p] = postprocess.paste_note(parts['translated'][p],d_idx,note)
             
-            parts['translated'][p] = postprocess.bold_bottom_staff(parts['translated'][p], parts['staff_line'][p])
             # cv2.imwrite(f'..\\results\\parts_translated{p}.jpg',parts['translated'][p])
             
             # Pasting all back on the image

@@ -16,12 +16,15 @@ args = parser.parse_args()
 if __name__ == "__main__":
 
     img = preprocess.read_image(args.input, 0)
+    input_name = args.input.split(chr(92))[-1].split(".")[0]
     # img = preprocess.read_image(r'..\data\arpege.jpg', 0)
     translated_img = copy.deepcopy(img)
     if preprocess.isGPformat(img):
         parts = {}
         parts['original'], parts['idx'] = preprocess.extract_parts(img)
         nb_parts = len(parts['original'])
+        if args.verbose:
+            print(f'nb_parts = {nb_parts}')
         empty_array = [[] for _ in range(nb_parts)]
         parts['inv'] = copy.deepcopy(empty_array)
         parts['thresh'] = copy.deepcopy(empty_array)
@@ -50,9 +53,9 @@ if __name__ == "__main__":
             parts['digits'][p]['idx'] = detect.get_digit_idx(parts['wo_staff'][p])
             parts['digits'][p]['img'] = detect.get_digit_img(parts['wo_staff'][p])
 
-            cv2.imwrite(f'..\\results\\parts_{p}.jpg',parts['inv'][p])
-            cv2.imwrite(f'..\\results\\thresh_{p}.jpg',parts['thresh'][p])
-            cv2.imwrite(f'..\\results\\remove{p}.jpg',parts['wo_staff'][p])
+            # cv2.imwrite(f'..\\results\\parts_{p}.jpg',parts['inv'][p])
+            # cv2.imwrite(f'..\\results\\thresh_{p}.jpg',parts['thresh'][p])
+            # cv2.imwrite(f'..\\results\\remove{p}.jpg',parts['wo_staff'][p])
 
             parts['translated'][p] = copy.deepcopy(parts['original'][p])
 
@@ -68,4 +71,4 @@ if __name__ == "__main__":
             # Pasting all back on the image
             translated_img[parts['idx'][p][0][0]:parts['idx'][p][1][0],parts['idx'][p][0][1]:parts['idx'][p][1][1]] = parts['translated'][p]
         if args.dest:
-            cv2.imwrite(args.dest, translated_img)
+            cv2.imwrite(args.dest + input_name + '_translated.jpg', translated_img)

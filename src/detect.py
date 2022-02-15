@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 def detect_intensity_along_axis(img, intensity, ax):
-    mask = np.mean(img, axis=ax) >= intensity
+    mask = np.sum(img, axis=ax) >= intensity
     limits = np.zeros(mask.shape, dtype='uint8')
     limits[1:-1] = (np.bitwise_xor(mask[1:-1], mask[0:-2])) * intensity
     idx = np.where(limits == intensity)[0]

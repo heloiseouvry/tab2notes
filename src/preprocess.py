@@ -61,7 +61,7 @@ def extract_parts(GPimg):
     start_cols = int(0.107*w)
     parts = []
     parts_idx = []
-    idx = detect.detect_intensity_along_axis(GPimg, 255, 1)
+    idx = detect.detect_intensity_along_axis(invert_img(GPimg), 255, 1)
     for id in idx:
         detected_height = id[1]-id[0]
         if detected_height / h > 0.10:

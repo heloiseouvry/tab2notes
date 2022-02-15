@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import classif
 
-def bold_bottom_staff(img, staff_idx):
+def bold_bottom_staff(img, staff_idx, thickness = 1):
     """Bolding the bottom staff line
     
     Args:
@@ -14,7 +14,7 @@ def bold_bottom_staff(img, staff_idx):
         modified image (copy)
     """
     res = np.copy(img)
-    res[staff_idx[-1][0]-2 : staff_idx[-1][1]+2 , :] = 0
+    res[staff_idx[-1][0]-thickness : staff_idx[-1][1]+thickness , :] = 0
     return res
 
 def paste_note(base_img, dgt_idx, dgt_note):

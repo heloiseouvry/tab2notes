@@ -40,27 +40,32 @@ if __name__ == "__main__":
         
             parts['staff_line'][p] = detect.staff_idx(parts['thresh'][p])
             parts['staff_col'][p] = detect.col_idx(parts['thresh'][p])
-            last = detect.is_last_part(parts['staff_col'][p])
+            bold = detect.is_bold_staff_col(parts['staff_col'][p])
+            last = detect.is_last_part(parts['thresh'][p])
+
             if last:
-                parts['original'][p] = parts['original'][p][:,:last]
-                parts['inv'][p] = parts['inv'][p][:,:last]
-                parts['thresh'][p] = parts['thresh'][p][:,:last]
-                parts['idx'][p][1] = (parts['idx'][p][1][0], parts['idx'][p][0][1] + last)
+                parts['original'][p] = parts['original'][p][:,:last[1]]
+                parts['inv'][p] = parts['inv'][p][:,:last[1]]
+                parts['thresh'][p] = parts['thresh'][p][:,:last[1]]
+                parts['idx'][p][1] = (parts['idx'][p][1][0], parts['idx'][p][0][1] + last[1])
 
             parts['wo_staff'][p] = detect.remove_staff_idx(parts['thresh'][p], parts['staff_line'][p])
             parts['wo_staff'][p] = detect.remove_col_idx(parts['wo_staff'][p], parts['staff_col'][p])
-
-            parts['digits'][p]['idx'] = detect.get_digit_idx(parts['wo_staff'][p])
-            parts['digits'][p]['img'] = detect.get_digit_img(parts['wo_staff'][p])
 
             # cv2.imwrite(f'..\\results\\parts_{p}.jpg',parts['inv'][p])
             # cv2.imwrite(f'..\\results\\thresh_{p}.jpg',parts['thresh'][p])
             # cv2.imwrite(f'..\\results\\remove{p}.jpg',parts['wo_staff'][p])
 
+            parts['digits'][p]['idx'] = detect.get_digit_idx(parts['wo_staff'][p])
+            parts['digits'][p]['img'] = detect.get_digit_img(parts['wo_staff'][p])
+
             parts['translated'][p] = copy.deepcopy(parts['original'][p])
 
             parts['translated'][p] = postprocess.bold_bottom_staff(parts['translated'][p], parts['staff_line'][p])
             for (i,d) in enumerate(parts['digits'][p]['img']):
+                dgt_ratio = d.shape[1]/d.shape[0]
+                if dgt_ratio > 0.8:
+                    continue
                 dgt = classif.with_digit_template(d)
                 d_idx = parts['digits'][p]['idx'][i]
                 note = classif.to_note(dgt,d_idx,parts['staff_line'][p],notation='fr')

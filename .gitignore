@@ -19,3 +19,8 @@ venv.bak/
 
 # Python
 __pycache__
+data/digit_template/old_0.jpg
+data/digit_template/old_2.jpg
+data/digit_template/old_3.jpg
+data/digit_template/old_4.jpg
+data/digit_template/old_8.jpg

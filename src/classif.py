@@ -59,7 +59,7 @@ def with_digit_template(dgt_img):
     width = dgt_img.shape[1]
     for i in range(10):
         template = digit_template_img[i]
-        if height != digit_template_h or width != digit_template_w:
+        if height != digit_template_img[i].shape[0] or width != digit_template_img[i].shape[1]:
             # dgt_img = cv2.resize(dgt_img, (digit_template_w,digit_template_h), interpolation=cv2.INTER_NEAREST)   # Resize digit to template size   
             template = cv2.resize(template, (width,height), interpolation=cv2.INTER_NEAREST)                                # Resize template to digit size     
         sub = np.bitwise_xor(dgt_img.astype(bool), template.astype(bool))
@@ -75,6 +75,7 @@ def to_staff(dgt_idx, staff_idx):
 
 def to_note(dgt, dgt_idx, staff_idx, notation=''):
     if notation == 'fr':
+        # print(f'digit = {dgt} on staff {to_staff(dgt_idx, staff_idx)}')
         return notes_fr[to_staff(dgt_idx, staff_idx)][dgt]
     else:
         return notes[to_staff(dgt_idx, staff_idx)][dgt]

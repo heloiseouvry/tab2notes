@@ -56,17 +56,17 @@ def isGPformat(img):
 
 def extract_parts(GPimg):
     h,w = GPimg.shape
-    mesure_height = int(0.06*h)
-    mesure_width = int(0.84*w)
+    part_height = int(0.062*h)
+    part_width = int(0.84*w)
     start_cols = int(0.107*w)
     parts = []
     parts_idx = []
-    idx = detect.detect_intensity_along_axis(GPimg, 255, 1)
+    idx = detect.detect_intensity_along_axis(invert_img(GPimg), 255, 1)
     for id in idx:
         detected_height = id[1]-id[0]
         if detected_height / h > 0.10:
-            parts.append(GPimg[id[1]-mesure_height:id[1],start_cols:start_cols+mesure_width])
-            parts_idx.append([(id[1]-mesure_height,start_cols),(id[1],start_cols+mesure_width)])
+            parts.append(GPimg[id[1]-part_height:id[1],start_cols:start_cols+part_width])
+            parts_idx.append([(id[1]-part_height,start_cols),(id[1],start_cols+part_width)])
     return [parts,parts_idx]
 
 def invert_img(img):

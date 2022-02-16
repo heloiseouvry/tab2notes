@@ -1,29 +1,25 @@
 import argparse
 import copy
-import classif
-import detect
-import preprocess
-import postprocess
+from . import classif, detect, preprocess, postprocess
 import numpy as np
 import cv2
 
-parser = argparse.ArgumentParser()
-parser.add_argument('-i','--input', help='path to input image file (required)')
-parser.add_argument('-d','--dest', help='path to output image file')
-parser.add_argument('-v','--verbose', help='more verbose', action="store_true")
-args = parser.parse_args()
+# parser = argparse.ArgumentParser()
+# parser.add_argument('-i','--input', help='path to input image file (required)')
+# parser.add_argument('-d','--dest', help='path to output image file')
+# parser.add_argument('-v','--verbose', help='more verbose', action="store_true")
+# args = parser.parse_args()
 
-if __name__ == "__main__":
-
-    img = preprocess.read_image(args.input, 0)
-    input_name = args.input.split(chr(92))[-1].split(".")[0]
+def translate(input, output, verbose=False):
+    img = preprocess.read_image(input, 0)
+    input_name = input.split(chr(92))[-1].split(".")[0]
     # img = preprocess.read_image(r'..\data\arpege.jpg', 0)
     translated_img = copy.deepcopy(img)
     if preprocess.isGPformat(img):
         parts = {}
         parts['original'], parts['idx'] = preprocess.extract_parts(img)
         nb_parts = len(parts['original'])
-        if args.verbose:
+        if verbose:
             print(f'nb_parts = {nb_parts}')
         empty_array = [[] for _ in range(nb_parts)]
         parts['inv'] = copy.deepcopy(empty_array)
@@ -75,5 +71,8 @@ if __name__ == "__main__":
             
             # Pasting all back on the image
             translated_img[parts['idx'][p][0][0]:parts['idx'][p][1][0],parts['idx'][p][0][1]:parts['idx'][p][1][1]] = parts['translated'][p]
-        if args.dest:
-            cv2.imwrite(args.dest + input_name + '_translated.jpg', translated_img)
+        if output:
+            cv2.imwrite(output + input_name + '_translated.jpg', translated_img)
+
+# if __name__ == "__main__":
+#     translate(args.input, args.output, args.verbose)

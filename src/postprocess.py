@@ -1,7 +1,7 @@
 import copy
 import cv2
 import numpy as np
-import classif
+from . import classif
 
 def bold_bottom_staff(img, staff_idx, thickness = 1):
     """Bolding the bottom staff line

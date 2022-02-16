@@ -1,7 +1,7 @@
 import os.path
 import cv2
 from pdf2image import convert_from_path
-import detect
+from . import detect
 
 def pdf2jpg(filepath):
     """Saves JPG image(s) from PDF file.

@@ -2,9 +2,11 @@ import cv2
 import numpy as np
 import os
 
+package_directory = os.path.dirname(os.path.abspath(__file__))
+
 digit_template_img = []
 for i in range(10):
-    digit_template_img.append(cv2.threshold(cv2.imread(f'{os.path.dirname(__file__)}\\..\\data\\digit_template\\{i}.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1])
+    digit_template_img.append(cv2.threshold(cv2.imread(f'{package_directory}\\..\\data\\digit_template\\{i}.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1])
 digit_template_h = digit_template_img[0].shape[0]
 digit_template_w = digit_template_img[0].shape[1]
 
@@ -28,15 +30,15 @@ notes_fr = {
 }
 
 notes_fr_img = {
-    'Do': cv2.threshold(cv2.imread(f'{os.path.dirname(__file__)}\\..\\data\\notes_fr\\0.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
-    'Ré': cv2.threshold(cv2.imread(f'{os.path.dirname(__file__)}\\..\\data\\notes_fr\\1.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
-    'Mi': cv2.threshold(cv2.imread(f'{os.path.dirname(__file__)}\\..\\data\\notes_fr\\2.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
-    'Fa': cv2.threshold(cv2.imread(f'{os.path.dirname(__file__)}\\..\\data\\notes_fr\\3.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
-    'Sol': cv2.threshold(cv2.imread(f'{os.path.dirname(__file__)}\\..\\data\\notes_fr\\4.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
-    'La': cv2.threshold(cv2.imread(f'{os.path.dirname(__file__)}\\..\\data\\notes_fr\\5.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
-    'Si': cv2.threshold(cv2.imread(f'{os.path.dirname(__file__)}\\..\\data\\notes_fr\\6.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
-    'b': cv2.threshold(cv2.imread(f'{os.path.dirname(__file__)}\\..\\data\\notes_fr\\7.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
-    '#': cv2.threshold(cv2.imread(f'{os.path.dirname(__file__)}\\..\\data\\notes_fr\\8.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1] 
+    'Do': cv2.threshold(cv2.imread(f'{package_directory}\\..\\data\\notes_fr\\0.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
+    'Ré': cv2.threshold(cv2.imread(f'{package_directory}\\..\\data\\notes_fr\\1.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
+    'Mi': cv2.threshold(cv2.imread(f'{package_directory}\\..\\data\\notes_fr\\2.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
+    'Fa': cv2.threshold(cv2.imread(f'{package_directory}\\..\\data\\notes_fr\\3.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
+    'Sol': cv2.threshold(cv2.imread(f'{package_directory}\\..\\data\\notes_fr\\4.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
+    'La': cv2.threshold(cv2.imread(f'{package_directory}\\..\\data\\notes_fr\\5.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
+    'Si': cv2.threshold(cv2.imread(f'{package_directory}\\..\\data\\notes_fr\\6.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
+    'b': cv2.threshold(cv2.imread(f'{package_directory}\\..\\data\\notes_fr\\7.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1],
+    '#': cv2.threshold(cv2.imread(f'{package_directory}\\..\\data\\notes_fr\\8.jpg',0), 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1] 
 }
 notes_fr_img['Do#'] = np.concatenate((notes_fr_img['Do'],notes_fr_img['#']), axis=1)
 notes_fr_img['Mib'] = np.concatenate((notes_fr_img['Mi'],notes_fr_img['b']), axis=1)

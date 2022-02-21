@@ -75,10 +75,8 @@ def translate(input, output, verbose=False):
             # Pasting all back on the image
             translated_img[parts['idx'][p][0][0]:parts['idx'][p][1][0],parts['idx'][p][0][1]:parts['idx'][p][1][1]] = parts['translated'][p]
         if output:
-            output_written = cv2.imwrite(output + input_name + '_translated.jpg', translated_img)
-            print(f'Output written: {output_written} on {output} as input {input_name} with path : {output + input_name + "_translated.jpg"}')
-            translated_img = cv2.imencode('.jpg', translated_img)[1].tostring()
-        return [translated_img, input_name + '_translated.jpg']
+            cv2.imwrite(output + input_name + '_translated.jpg', translated_img)
+        return input_name + '_translated.jpg'
 
 # if __name__ == "__main__":
 #     translate(args.input, args.output, args.verbose)

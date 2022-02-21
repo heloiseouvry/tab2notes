@@ -42,6 +42,7 @@ def pdf2jpg(filepath):
             f.save(f'{start}{filename}{filenum}.jpg', 'jpeg')
     except Exception as e:
         print(f"Issue in PDF conversion: {e}")
+    return i+1
 
 def read_image(filepath, color=True):
     """Read an image with OpenCV and return it as a numpy array
@@ -64,7 +65,9 @@ def read_image(filepath, color=True):
         if not os.path.isfile(filepath):
             raise ValueError('Filepath is not valid')
         if ispdf(filepath):
+            no_pages = pdf2jpg(filepath)
             [_, filename, _] = path_split(filepath)
+            filepath = f'{filename}.jpg'
         return cv2.imread(filename, int(color))
 
 def isGPformat(img):

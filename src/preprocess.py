@@ -5,6 +5,7 @@ from pdf2image import convert_from_path
 from urllib.request import urlopen
 from . import detect
 
+
 def path_split(path):
     filename = path.split(os.path.sep)[-1].split(".")[0]
     format = path.split(os.path.sep)[-1].split(".")[1]
@@ -34,15 +35,23 @@ def pdf2jpg(filepath):
             if not os.path.isfile(filepath):
                 raise ValueError('File does not exist')
             file = convert_from_path(filepath)
-        [start, filename, fileformat] = path_split(filepath)
+        [start, filename, _] = path_split(filepath)
         filenum = ''
         for (i,f) in enumerate(file):
+            save_path = f'{start}{filename}{filenum}.jpg'
             if i >= 1:
                 filenum = f'_{i+1}'
-            f.save(f'{start}{filename}{filenum}.jpg', 'jpeg')
+            f.save(save_path, 'jpeg')
     except Exception as e:
         print(f"Issue in PDF conversion: {e}")
     return i+1
+
+def get_no_pages(input):
+    if not isinstance(input,str):
+        raise ValueError('Filepath should be a string')
+    if not os.path.isfile(input):
+        raise ValueError('Filepath is not valid')
+    return pdf2jpg(input) if ispdf(input) else 1
 
 def read_image(filepath, color=True):
     """Read an image with OpenCV and return it as a numpy array
@@ -63,7 +72,7 @@ def read_image(filepath, color=True):
         return img
     else:
         if not os.path.isfile(filepath):
-            raise ValueError('Filepath is not valid')
+            raise ValueError(f'Filepath is not valid [{filepath}]')
         if ispdf(filepath):
             no_pages = pdf2jpg(filepath)
             [_, filename, _] = path_split(filepath)

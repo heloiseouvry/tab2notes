@@ -10,12 +10,8 @@ import cv2
 # parser.add_argument('-v','--verbose', help='more verbose', action="store_true")
 # args = parser.parse_args()
 
-def translate(input, output, verbose=False):
+def translate_img(input):
     img = preprocess.read_image(input, 0)
-
-    
-    [_, input_name, _] = preprocess.path_split(input)
-    # img = preprocess.read_image(r'..\data\arpege.jpg', 0)
     translated_img = copy.deepcopy(img)
     if preprocess.isGPformat(img):
         parts = {}
@@ -73,9 +69,26 @@ def translate(input, output, verbose=False):
             
             # Pasting all back on the image
             translated_img[parts['idx'][p][0][0]:parts['idx'][p][1][0],parts['idx'][p][0][1]:parts['idx'][p][1][1]] = parts['translated'][p]
+        return translate_img
+        
+def translate(input, output, verbose=False):
+    no_pages = preprocess.get_no_pages(input)
+    [start, input_name, format] = preprocess.path_split(input)
+    print(f'input = {input}')
+    print(f'output = {output}')
+    translation = []
+    input_img_path = f'{start}{input_name}.jpg'
+    for i in range(no_pages):
+        if i >= 1:
+            input_img_path = f'{start}{input_name}_{i}.jpg'
+        print(f'input_img_path = {input_img_path}')
+        translated_img = translate_img(input_img_path)
+        output_img_path = f'{start}{input_name}_{i}_translated.jpg'
+        translation.append(output_img_path)
+        print(f'translation = {translation}')
         if output:
-            cv2.imwrite(output + input_name + '_translated.jpg', translated_img)
-        return input_name + '_translated.jpg'
+            cv2.imwrite(output_img_path, translated_img)
+    return translation
 
 # if __name__ == "__main__":
 #     translate(args.input, args.output, args.verbose)

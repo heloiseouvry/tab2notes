@@ -5,6 +5,12 @@ from pdf2image import convert_from_path
 from urllib.request import urlopen
 from . import detect
 
+def path_split(path):
+    filename = path.split(os.path.sep)[-1].split(".")[0]
+    format = path.split(os.path.sep)[-1].split(".")[1]
+    start = path[:-(len(filename)+len(format)+1)]
+    return [start, filename, format]
+
 def isurl(input):
     return True if input.startswith('http') else False
 
@@ -28,12 +34,12 @@ def pdf2jpg(filepath):
             if not os.path.isfile(filepath):
                 raise ValueError('File does not exist')
             file = convert_from_path(filepath)
-        filepath = filepath[:-4]
+        [start, filename, fileformat] = path_split(filepath)
         filenum = ''
         for (i,f) in enumerate(file):
             if i >= 1:
                 filenum = f'_{i+1}'
-            f.save(f'{filepath}{filenum}.jpg', 'jpeg')
+            f.save(f'{start}{filename}{filenum}.jpg', 'jpeg')
     except Exception as e:
         print(f"Issue in PDF conversion: {e}")
 
@@ -46,6 +52,7 @@ def read_image(filepath, color=True):
     Returns:
         image as a numpy array
     """
+
     if not isinstance(filepath,str):
         raise ValueError('Filepath should be a string')
 
@@ -57,9 +64,8 @@ def read_image(filepath, color=True):
         if not os.path.isfile(filepath):
             raise ValueError('Filepath is not valid')
         if ispdf(filepath):
-            pdf2jpg(filepath)
-            filepath = f'{filepath[:-4]}.jpg'
-        return cv2.imread(filepath, int(color))
+            [_, filename, _] = path_split(filepath)
+        return cv2.imread(filename, int(color))
 
 def isGPformat(img):
     h,w = img.shape

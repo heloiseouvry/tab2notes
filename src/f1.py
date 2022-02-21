@@ -12,7 +12,10 @@ import cv2
 
 def translate(input, output, verbose=False):
     img = preprocess.read_image(input, 0)
-    input_name = input.split(chr(92))[-1].split(".")[0]
+    if chr(47) in input:
+        input_name = input.split(chr(47))[-1].split(".")[0]
+    if chr(92) in input:
+        input_name = input.split(chr(92))[-1].split(".")[0]
     # img = preprocess.read_image(r'..\data\arpege.jpg', 0)
     translated_img = copy.deepcopy(img)
     if preprocess.isGPformat(img):

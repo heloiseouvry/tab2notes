@@ -73,7 +73,7 @@ def translate(input, output, verbose=False):
             translated_img[parts['idx'][p][0][0]:parts['idx'][p][1][0],parts['idx'][p][0][1]:parts['idx'][p][1][1]] = parts['translated'][p]
         if output:
             output_written = cv2.imwrite(output + input_name + '_translated.jpg', translated_img)
-            print(f'Output written: {output_written}')
+            print(f'Output written: {output_written} on {output} with path : {output + input_name + "_translated.jpg"}')
         return [translated_img, input_name + '_translated.jpg']
 
 # if __name__ == "__main__":

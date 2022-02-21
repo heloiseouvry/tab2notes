@@ -11,7 +11,7 @@ def isurl(input):
 def ispdf(input):
     return True if input.split('.')[-1] == 'pdf' else False
 
-def pdf2jpg(filepath, url=False):
+def pdf2jpg(filepath):
     """Saves JPG image(s) from PDF file.
     If there is more than one page, it will number the filename.
     Args:
@@ -36,7 +36,6 @@ def pdf2jpg(filepath, url=False):
             f.save(f'{filepath}{filenum}.jpg', 'jpeg')
     except Exception as e:
         print(f"Issue in PDF conversion: {e}")
-    return file
 
 def read_image(filepath, color=True):
     """Read an image with OpenCV and return it as a numpy array

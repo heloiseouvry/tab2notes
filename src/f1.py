@@ -7,7 +7,6 @@ import cv2
 # parser = argparse.ArgumentParser()
 # parser.add_argument('-i','--input', help='path to input image file (required)')
 # parser.add_argument('-d','--dest', help='path to output image file')
-# parser.add_argument('-v','--verbose', help='more verbose', action="store_true")
 # args = parser.parse_args()
 
 def translate_img(input):
@@ -17,8 +16,6 @@ def translate_img(input):
         parts = {}
         parts['original'], parts['idx'] = preprocess.extract_parts(img)
         nb_parts = len(parts['original'])
-        if verbose:
-            print(f'nb_parts = {nb_parts}')
         empty_array = [[] for _ in range(nb_parts)]
         parts['inv'] = copy.deepcopy(empty_array)
         parts['thresh'] = copy.deepcopy(empty_array)
@@ -71,7 +68,7 @@ def translate_img(input):
             translated_img[parts['idx'][p][0][0]:parts['idx'][p][1][0],parts['idx'][p][0][1]:parts['idx'][p][1][1]] = parts['translated'][p]
         return translate_img
         
-def translate(input, output, verbose=False):
+def translate(input, output):
     no_pages = preprocess.get_no_pages(input)
     [start, input_name, format] = preprocess.path_split(input)
     print(f'input = {input}')
@@ -91,4 +88,4 @@ def translate(input, output, verbose=False):
     return translation
 
 # if __name__ == "__main__":
-#     translate(args.input, args.output, args.verbose)
+#     translate(args.input, args.output)

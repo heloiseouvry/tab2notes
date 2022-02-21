@@ -1,9 +1,17 @@
 import os.path
 import cv2
+import numpy as np
 from pdf2image import convert_from_path
+from urllib.request import urlopen
 from . import detect
 
-def pdf2jpg(filepath):
+def isurl(input):
+    return True if input.startswith('http') else False
+
+def ispdf(input):
+    return True if input.split('.')[-1] == 'pdf' else False
+
+def pdf2jpg(filepath, url=False):
     """Saves JPG image(s) from PDF file.
     If there is more than one page, it will number the filename.
     Args:
@@ -11,21 +19,24 @@ def pdf2jpg(filepath):
     """
     if not isinstance(filepath,str):
         raise ValueError('Filepath should be a string')
-    if not os.path.isfile(filepath):
-        raise ValueError('File does not exist')
-    if not filepath.split('.')[-1] == 'pdf':
+    if not ispdf(filepath):
         raise ValueError('File is not a pdf')
     try:
-        file = convert_from_path(filepath)
+        if isurl(filepath):
+            file = convert_from_path(bytearray(urlopen(filepath).read()), fmt='jpg')
+        else :
+            if not os.path.isfile(filepath):
+                raise ValueError('File does not exist')
+            file = convert_from_path(filepath)
         filepath = filepath[:-4]
         filenum = ''
         for (i,f) in enumerate(file):
             if i >= 1:
                 filenum = f'_{i+1}'
             f.save(f'{filepath}{filenum}.jpg', 'jpeg')
-    except:
-        print("Issue in PDF conversion")
-    
+    except Exception as e:
+        print(f"Issue in PDF conversion: {e}")
+    return file
 
 def read_image(filepath, color=True):
     """Read an image with OpenCV and return it as a numpy array
@@ -38,14 +49,18 @@ def read_image(filepath, color=True):
     """
     if not isinstance(filepath,str):
         raise ValueError('Filepath should be a string')
-    if not os.path.isfile(filepath):
-        raise ValueError('Filepath is not valid')
 
-    if filepath.split('.')[-1] == 'pdf':
-        pdf2jpg(filepath)
-        filepath = f'{filepath[:-4]}.jpg'
-
-    return cv2.imread(filepath, int(color))
+    if isurl(filepath):
+        img = np.asarray(bytearray(urlopen(filepath).read()), dtype="uint8")
+        img = cv2.imdecode(img, 0)
+        return img
+    else:
+        if not os.path.isfile(filepath):
+            raise ValueError('Filepath is not valid')
+        if ispdf(filepath):
+            pdf2jpg(filepath)
+            filepath = f'{filepath[:-4]}.jpg'
+        return cv2.imread(filepath, int(color))
 
 def isGPformat(img):
     h,w = img.shape

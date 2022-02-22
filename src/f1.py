@@ -66,7 +66,7 @@ def translate_img(input):
             
             # Pasting all back on the image
             translated_img[parts['idx'][p][0][0]:parts['idx'][p][1][0],parts['idx'][p][0][1]:parts['idx'][p][1][1]] = parts['translated'][p]
-        return translate_img
+        return translated_img
         
 def translate(input, output):
     no_pages = preprocess.get_no_pages(input)
@@ -75,12 +75,14 @@ def translate(input, output):
     print(f'output = {output}')
     translation = []
     input_img_path = f'{start}{input_name}.jpg'
+    output_img_path = f'{input_name}_translated.jpg'
     for i in range(no_pages):
         if i >= 1:
-            input_img_path = f'{start}{input_name}_{i}.jpg'
+            input_img_path = f'{start}{input_name}_{i+1}.jpg'
+            output_img_path = f'{input_name}_{i+1}_translated.jpg'
         print(f'input_img_path = {input_img_path}')
+        print(f'output_img_path = {output_img_path}')
         translated_img = translate_img(input_img_path)
-        output_img_path = f'{start}{input_name}_{i}_translated.jpg'
         translation.append(output_img_path)
         print(f'translation = {translation}')
         if output:

@@ -65,19 +65,9 @@ def read_image(filepath, color=True):
 
     if not isinstance(filepath,str):
         raise ValueError('Filepath should be a string')
-
-    if isurl(filepath):
-        img = np.asarray(bytearray(urlopen(filepath).read()), dtype="uint8")
-        img = cv2.imdecode(img, 0)
-        return img
-    else:
-        if not os.path.isfile(filepath):
-            raise ValueError(f'Filepath is not valid [{filepath}]')
-        if ispdf(filepath):
-            no_pages = pdf2jpg(filepath)
-            [_, filename, _] = path_split(filepath)
-            filepath = f'{filename}.jpg'
-        return cv2.imread(filename, int(color))
+    if not os.path.isfile(filepath):
+        raise ValueError(f'Filepath is not valid [{filepath}]')
+    return cv2.imread(filepath, int(color))
 
 def isGPformat(img):
     h,w = img.shape

@@ -86,7 +86,7 @@ def translate(input, output):
         translation.append(output_img_path)
         print(f'translation = {translation}')
         if output:
-            cv2.imwrite(output_img_path, translated_img)
+            cv2.imwrite(start+output_img_path, translated_img)
     return translation
 
 # if __name__ == "__main__":

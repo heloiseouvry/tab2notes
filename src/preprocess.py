@@ -38,9 +38,10 @@ def pdf2jpg(filepath):
         [start, filename, _] = path_split(filepath)
         filenum = ''
         for (i,f) in enumerate(file):
-            save_path = f'{start}{filename}{filenum}.jpg'
             if i >= 1:
                 filenum = f'_{i+1}'
+            save_path = f'{start}{filename}{filenum}.jpg'
+            print(f'save_path : {save_path} | i = {i}')
             f.save(save_path, 'jpeg')
     except Exception as e:
         print(f"Issue in PDF conversion: {e}")

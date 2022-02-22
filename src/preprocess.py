@@ -38,6 +38,7 @@ def pdf2jpg(filepath):
         [start, filename, _] = path_split(filepath)
         filenum = ''
         for (i,f) in enumerate(file):
+            print(f"i: {i}")
             if i >= 1:
                 filenum = f'_{i+1}'
             save_path = f'{start}{filename}{filenum}.jpg'

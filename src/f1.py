@@ -1,4 +1,5 @@
 import argparse
+from cmath import log
 import copy
 from . import classif, detect, preprocess, postprocess
 import numpy as np
@@ -9,7 +10,7 @@ import cv2
 # parser.add_argument('-d','--dest', help='path to output image file')
 # args = parser.parse_args()
 
-def translate_img(input):
+def translate_img(input, logger=None):
     img = preprocess.read_image(input, 0)
     translated_img = copy.deepcopy(img)
     if preprocess.isGPformat(img):
@@ -25,6 +26,9 @@ def translate_img(input):
         parts['staff_col'] = copy.deepcopy(empty_array)
         parts['digits'] = [{'idx': [],'img': [],'classif': [],'note':[]} for _ in range(nb_parts)]  
 
+        if logger:
+            logger.info(f"Nombre de parties : {nb_parts}")
+
         for p in range(nb_parts):
             parts['inv'][p] = preprocess.invert_img(parts['original'][p])
             parts['thresh'][p] = preprocess.thresh_img(parts['inv'][p])
@@ -39,6 +43,9 @@ def translate_img(input):
                 parts['inv'][p] = parts['inv'][p][:,:last[1]]
                 parts['thresh'][p] = parts['thresh'][p][:,:last[1]]
                 parts['idx'][p][1] = (parts['idx'][p][1][0], parts['idx'][p][0][1] + last[1])
+
+            if logger:
+                logger.info(f"... Parts {p}/{nb_parts} ...")
 
             parts['wo_staff'][p] = detect.remove_staff_idx(parts['thresh'][p], parts['staff_line'][p])
             parts['wo_staff'][p] = detect.remove_col_idx(parts['wo_staff'][p], parts['staff_col'][p])
@@ -76,23 +83,29 @@ def translate(input, output, logger=None):
     translation = []
     input_img_path = f'{start}{input_name}.jpg'
     output_img_path = f'{input_name}_translated.jpg'
+    if logger:
+        logger.info(f"""
+        {' PARTITION ':#^50}
+        Nom de la partition : {input_name}
+        Nombre de pages : {no_pages}
+        {' Chemins ':-^40}
+        Input : {input_img_path}
+        Output : {output_img_path}
+        {' TRADUCTION ':#^50}
+        """)
     for i in range(no_pages):
+        if logger:
+            logger.info(f"------- Page {i}/{no_pages} -------")
         if i >= 1:
             input_img_path = f'{start}{input_name}_{i+1}.jpg'
             output_img_path = f'{input_name}_{i+1}_translated.jpg'
         print(f'input_img_path = {input_img_path}')
         print(f'output_img_path = {output_img_path}')
-        translated_img = translate_img(input_img_path)
+        translated_img = translate_img(input_img_path, logger=logger)
         translation.append(output_img_path)
         print(f'translation = {translation}')
         if output:
             cv2.imwrite(start+output_img_path, translated_img)
-    logger.info(f"""
-    {' PARTITION ':#^50}
-    {input_name}
-    Nombre de pages : '{no_pages}'
-    {' Page 1 ':-^40}
-    """)
     return translation
 
 # if __name__ == "__main__":

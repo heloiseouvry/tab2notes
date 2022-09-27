@@ -82,7 +82,7 @@ def translate(input, output, logger=None):
             output_img_path = f'{input_name}_{i+1}_translated.jpg'
         print(f'input_img_path = {input_img_path}')
         print(f'output_img_path = {output_img_path}')
-        translated_img = translate_img(input_img_path, logging=True)
+        translated_img = translate_img(input_img_path)
         translation.append(output_img_path)
         print(f'translation = {translation}')
         if output:

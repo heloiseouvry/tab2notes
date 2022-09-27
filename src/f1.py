@@ -68,7 +68,7 @@ def translate_img(input):
             translated_img[parts['idx'][p][0][0]:parts['idx'][p][1][0],parts['idx'][p][0][1]:parts['idx'][p][1][1]] = parts['translated'][p]
         return translated_img
         
-def translate(input, output):
+def translate(input, output, logger=None):
     no_pages = preprocess.get_no_pages(input)
     [start, input_name, format] = preprocess.path_split(input)
     print(f'input = {input}')
@@ -82,11 +82,17 @@ def translate(input, output):
             output_img_path = f'{input_name}_{i+1}_translated.jpg'
         print(f'input_img_path = {input_img_path}')
         print(f'output_img_path = {output_img_path}')
-        translated_img = translate_img(input_img_path)
+        translated_img = translate_img(input_img_path, logging=True)
         translation.append(output_img_path)
         print(f'translation = {translation}')
         if output:
             cv2.imwrite(start+output_img_path, translated_img)
+    logger.info(f"""
+    {' PARTITION ':#^50}
+    {input_name}
+    Nombre de pages : '{no_pages}'
+    {' Page 1 ':-^40}
+    """)
     return translation
 
 # if __name__ == "__main__":

@@ -7,23 +7,15 @@ import cv2
 # parser = argparse.ArgumentParser()
 # parser.add_argument('-i','--input', help='path to input image file (required)')
 # parser.add_argument('-d','--dest', help='path to output image file')
-# parser.add_argument('-v','--verbose', help='more verbose', action="store_true")
 # args = parser.parse_args()
 
-def translate(input, output, verbose=False):
+def translate_img(input):
     img = preprocess.read_image(input, 0)
-    if chr(47) in input:
-        input_name = input.split(chr(47))[-1].split(".")[0]
-    if chr(92) in input:
-        input_name = input.split(chr(92))[-1].split(".")[0]
-    # img = preprocess.read_image(r'..\data\arpege.jpg', 0)
     translated_img = copy.deepcopy(img)
     if preprocess.isGPformat(img):
         parts = {}
         parts['original'], parts['idx'] = preprocess.extract_parts(img)
         nb_parts = len(parts['original'])
-        if verbose:
-            print(f'nb_parts = {nb_parts}')
         empty_array = [[] for _ in range(nb_parts)]
         parts['inv'] = copy.deepcopy(empty_array)
         parts['thresh'] = copy.deepcopy(empty_array)
@@ -74,9 +66,34 @@ def translate(input, output, verbose=False):
             
             # Pasting all back on the image
             translated_img[parts['idx'][p][0][0]:parts['idx'][p][1][0],parts['idx'][p][0][1]:parts['idx'][p][1][1]] = parts['translated'][p]
+        return translated_img
+        
+def translate(input, output, logger=None):
+    no_pages = preprocess.get_no_pages(input)
+    [start, input_name, format] = preprocess.path_split(input)
+    print(f'input = {input}')
+    print(f'output = {output}')
+    translation = []
+    input_img_path = f'{start}{input_name}.jpg'
+    output_img_path = f'{input_name}_translated.jpg'
+    for i in range(no_pages):
+        if i >= 1:
+            input_img_path = f'{start}{input_name}_{i+1}.jpg'
+            output_img_path = f'{input_name}_{i+1}_translated.jpg'
+        print(f'input_img_path = {input_img_path}')
+        print(f'output_img_path = {output_img_path}')
+        translated_img = translate_img(input_img_path, logging=True)
+        translation.append(output_img_path)
+        print(f'translation = {translation}')
         if output:
-            cv2.imwrite(output + input_name + '_translated.jpg', translated_img)
-        return input_name + '_translated.jpg'
+            cv2.imwrite(start+output_img_path, translated_img)
+    logger.info(f"""
+    {' PARTITION ':#^50}
+    {input_name}
+    Nombre de pages : '{no_pages}'
+    {' Page 1 ':-^40}
+    """)
+    return translation
 
 # if __name__ == "__main__":
-#     translate(args.input, args.output, args.verbose)
+#     translate(args.input, args.output)

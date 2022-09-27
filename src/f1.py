@@ -45,7 +45,7 @@ def translate_img(input, logger=None):
                 parts['idx'][p][1] = (parts['idx'][p][1][0], parts['idx'][p][0][1] + last[1])
 
             if logger:
-                logger.info(f"... Parts {p}/{nb_parts} ...")
+                logger.info(f"... Parts {p+1}/{nb_parts} ...")
 
             parts['wo_staff'][p] = detect.remove_staff_idx(parts['thresh'][p], parts['staff_line'][p])
             parts['wo_staff'][p] = detect.remove_col_idx(parts['wo_staff'][p], parts['staff_col'][p])
@@ -67,6 +67,8 @@ def translate_img(input, logger=None):
                 dgt = classif.with_digit_template(d)
                 d_idx = parts['digits'][p]['idx'][i]
                 note = classif.to_note(dgt,d_idx,parts['staff_line'][p],notation='fr')
+                if logger:
+                    logger.info(f"Digit {dgt} > Note {note}")
                 parts['translated'][p] = postprocess.paste_note(parts['translated'][p],d_idx,note)
             
             # cv2.imwrite(f'..\\results\\parts_translated{p}.jpg',parts['translated'][p])
@@ -95,7 +97,7 @@ def translate(input, output, logger=None):
         """)
     for i in range(no_pages):
         if logger:
-            logger.info(f"------- Page {i}/{no_pages} -------")
+            logger.info(f"------- Page {i+1}/{no_pages} -------")
         if i >= 1:
             input_img_path = f'{start}{input_name}_{i+1}.jpg'
             output_img_path = f'{input_name}_{i+1}_translated.jpg'
